@@ -384,17 +384,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <dl class="rise mt-14 grid max-w-3xl grid-cols-3 gap-6 border-t border-hair pt-7" style="--d:480ms">
           <div>
             <dt class="font-display text-[1.7rem] font-semibold leading-none tracking-tighter2 sm:text-[2.1rem]"><span
-                data-count="20">0</span>+</dt>
+                data-count="20">20</span>+</dt>
             <dd class="mt-2 text-[0.84rem] leading-[1.45] text-muted">years shipping production systems</dd>
           </div>
           <div>
             <dt class="font-display text-[1.7rem] font-semibold leading-none tracking-tighter2 sm:text-[2.1rem]"><span
-                data-count="6">0</span></dt>
+                data-count="6">6</span></dt>
             <dd class="mt-2 text-[0.84rem] leading-[1.45] text-muted">disciplines under one roof</dd>
           </div>
           <div>
             <dt class="font-display text-[1.7rem] font-semibold leading-none tracking-tighter2 sm:text-[2.1rem]"><span
-                data-count="2">0</span> wk</dt>
+                data-count="2">2</span> wk</dt>
             <dd class="mt-2 text-[0.84rem] leading-[1.45] text-muted">between working builds</dd>
           </div>
         </dl>
@@ -778,7 +778,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     /* ── stat counters ─────────────────────────────────────────── */
     document.querySelectorAll('[data-count]').forEach(el => {
       const target = +el.dataset.count;
-      if (reduced) { el.textContent = target; return; }
+      if (reduced) return;
+      el.textContent = 0;
       const io = new IntersectionObserver(entries => {
         if (!entries[0].isIntersecting) return;
         io.disconnect();
