@@ -102,7 +102,8 @@
     }
 
     a:focus-visible,
-    button:focus-visible {
+    button:focus-visible,
+    [role="tabpanel"]:focus-visible {
       outline: 2px solid #2A55E5;
       outline-offset: 3px;
       border-radius: 6px;
@@ -489,19 +490,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <span class="mb-1 block font-mono text-[0.62rem] tracking-[0.1em] text-white/60">W1</span>
               <span class="block text-[0.89rem] font-semibold leading-tight lg:text-[0.82rem]">Discovery</span>
             </button>
-            <button role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" data-label="Design"
+            <button role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1" data-label="Design"
               data-weeks="Weeks 2–3"
               class="rounded-lg bg-ink-3 px-3 py-3 text-left lg:px-2.5 transition hover:bg-ink-line aria-selected:bg-brand lg:col-span-2">
               <span class="mb-1 block font-mono text-[0.62rem] tracking-[0.1em] text-white/60">W2–W3</span>
               <span class="block text-[0.89rem] font-semibold leading-tight lg:text-[0.82rem]">Design</span>
             </button>
-            <button role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" data-label="Development"
+            <button role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1" data-label="Development"
               data-weeks="Weeks 4–7"
               class="rounded-lg bg-ink-3 px-3 py-3 text-left lg:px-2.5 transition hover:bg-ink-line aria-selected:bg-brand lg:col-span-4">
               <span class="mb-1 block font-mono text-[0.62rem] tracking-[0.1em] text-white/60">W4–W7</span>
               <span class="block text-[0.89rem] font-semibold leading-tight lg:text-[0.82rem]">Development</span>
             </button>
-            <button role="tab" id="tab-4" aria-controls="panel-4" aria-selected="false" data-label="Deployment"
+            <button role="tab" id="tab-4" aria-controls="panel-4" aria-selected="false" tabindex="-1" data-label="Deployment"
               data-weeks="Week 8"
               class="rounded-lg bg-ink-3 px-3 py-3 text-left lg:px-2.5 transition hover:bg-ink-line aria-selected:bg-brand lg:col-span-1">
               <span class="mb-1 block font-mono text-[0.62rem] tracking-[0.1em] text-white/60">W8</span>
@@ -805,7 +806,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function select(i) {
       if (i === current) return;
       current = i;
-      tabs.forEach((t, n) => t.setAttribute('aria-selected', n === i ? 'true' : 'false'));
+      tabs.forEach((t, n) => {
+        t.setAttribute('aria-selected', n === i ? 'true' : 'false');
+        t.tabIndex = n === i ? 0 : -1;
+      });
       const swap = () => {
         panels.forEach((p, n) => { p.hidden = n !== i; });
         pIndex.textContent = i + 1;
@@ -818,12 +822,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       setTimeout(swap, 160);
     }
 
+    panels.forEach(p => { p.tabIndex = 0; });
+
     tabs.forEach((t, i) => {
       t.addEventListener('click', () => select(i));
       t.addEventListener('keydown', e => {
-        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        const last = tabs.length - 1;
+        const next = { ArrowRight: i === last ? 0 : i + 1, ArrowLeft: i === 0 ? last : i - 1, Home: 0, End: last }[e.key];
+        if (next === undefined) return;
         e.preventDefault();
-        const next = (i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length;
         tabs[next].focus(); select(next);
       });
     });
